@@ -283,6 +283,14 @@ static RNFrostedSidebar *rn_frostedMenu;
         _images = images;
         
         [_images enumerateObjectsUsingBlock:^(UIImage *image, NSUInteger idx, BOOL *stop) {
+            
+            NSString *title = nil;
+            if (self.titles) {
+                if (self.titles.count > idx) {
+                    title = self.titles[idx];
+                }
+            }
+            
             RNCalloutItemView *view = [[RNCalloutItemView alloc] init];
             view.itemIndex = idx;
             view.clipsToBounds = YES;
@@ -294,8 +302,7 @@ static RNFrostedSidebar *rn_frostedMenu;
             if (_borderColors && _selectedIndices && [_selectedIndices containsIndex:idx]) {
                 UIColor *color = _borderColors[idx];
                 view.layer.borderColor = color.CGColor;
-            }
-            else {
+            } else {
                 view.layer.borderColor = [UIColor clearColor].CGColor;
             }
         }];
@@ -617,8 +624,23 @@ static RNFrostedSidebar *rn_frostedMenu;
 - (void)layoutItems {
     CGFloat leftPadding = (self.width - self.itemSize.width)/2;
     CGFloat topPadding = leftPadding;
+    
+    NSUInteger count = self.itemViews.count;
+    
+    const NSUInteger MAX_PER_HEIGHT = ([UIScreen mainScreen].bounds.size.height / (self.itemSize.height + topPadding));
+    
+    // Work out the yOffset to allow centering.
+    CGFloat yOffset = ([UIScreen mainScreen].bounds.size.height / (count + 1));
+    
     [self.itemViews enumerateObjectsUsingBlock:^(RNCalloutItemView *view, NSUInteger idx, BOOL *stop) {
-        CGRect frame = CGRectMake(leftPadding, topPadding*idx + self.itemSize.height*idx + topPadding, self.itemSize.width, self.itemSize.height);
+        CGFloat yPos = topPadding*idx + self.itemSize.height*idx + topPadding;
+        if (count <= MAX_PER_HEIGHT) {
+            yPos = yOffset * (idx + 1) - self.itemSize.height / 2;
+        }
+        CGRect frame = CGRectMake(leftPadding,
+                                  yPos,
+                                  self.itemSize.width,
+                                  self.itemSize.height);
         view.frame = frame;
         view.layer.cornerRadius = frame.size.width/2.f;
     }];

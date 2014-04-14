@@ -27,43 +27,68 @@
 
 + (instancetype)visibleSidebar;
 
-// The width of the sidebar
-// Default 150
+/**
+ * The width of the sidebar
+ * Default 150
+ */
 @property (nonatomic, assign) CGFloat width;
 
-// Access the view that contains the menu items
+/**
+ * Access the view that contains the menu items
+ */
 @property (nonatomic, strong, readonly) UIScrollView *contentView;
 
-// Toggle displaying the sidebar on the right side of the device
-// Default NO
+/**
+ * Toggle displaying the sidebar on the right side of the device
+ * Default NO
+ */
 @property (nonatomic, assign) BOOL showFromRight;
 
-// The duration of the show and hide animations
-// Default 0.25
+/**
+ * The duration of the show and hide animations
+ * Default 0.25
+ */
 @property (nonatomic, assign) CGFloat animationDuration;
 
-// The dimension for each item view, not including padding
-// Default {75, 75}
+/**
+ * The dimension for each item view, not including padding
+ * Default {75, 75}
+ */
 @property (nonatomic, assign) CGSize itemSize;
 
-// The color to tint the blur effect
-// Default white: 0.2, alpha: 0.73
+/**
+ * The color to tint the blur effect
+ * Default white: 0.2, alpha: 0.73
+ */
 @property (nonatomic, strong) UIColor *tintColor;
 
-// The background color for each item view
-// NOTE: set using either colorWithWhite:alpha or colorWithRed:green:blue:alpha
-// Default white: 1, alpha 0.25
+/**
+ * The background color for each item view
+ * NOTE: set using either colorWithWhite:alpha or colorWithRed:green:blue:alpha
+ * Default white: 1, alpha 0.25
+ */
 @property (nonatomic, strong) UIColor *itemBackgroundColor;
 
-// The width of the colored border for selected item views
-// Default 2
+/**
+ * The width of the colored border for selected item views
+ * Default 2
+ */
 @property (nonatomic, assign) NSUInteger borderWidth;
 
-// If YES, only a single item can be selected at a time, and one item is always selected
-// Default NO
+/** 
+ * If YES, only a single item can be selected at a time, and one item is always selected
+ * Default NO
+ */
 @property (nonatomic, assign) BOOL isSingleSelect;
 
-// An optional delegate to respond to interaction events
+/**
+ * Add titles to display under the images.
+ */
+@property (nonatomic, strong) NSArray *titles;
+
+/**s
+ * An optional delegate to respond to interaction events
+ */
 @property (nonatomic, weak) id <RNFrostedSidebarDelegate> delegate;
 
 - (instancetype)initWithImages:(NSArray *)images selectedIndices:(NSIndexSet *)selectedIndices borderColors:(NSArray *)colors;
