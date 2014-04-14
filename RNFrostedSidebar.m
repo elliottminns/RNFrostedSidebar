@@ -287,7 +287,11 @@ static RNFrostedSidebar *rn_frostedMenu;
         
         _width = 150;
         _animationDuration = 0.25f;
-        _itemSize = CGSizeMake(_width/2, _width/2);
+        CGFloat height = _width;
+        if (self.titles) {
+            height += 40;
+        }
+        _itemSize = CGSizeMake(_width / 2, height / 2);
         _itemViews = [NSMutableArray array];
         _tintColor = [UIColor colorWithWhite:0.2 alpha:0.73];
         _borderWidth = 2;
