@@ -287,11 +287,8 @@ static RNFrostedSidebar *rn_frostedMenu;
         
         _width = 150;
         _animationDuration = 0.25f;
-        CGFloat height = _width;
-        if (self.titles) {
-            height += 40;
-        }
-        _itemSize = CGSizeMake(_width / 2, height / 2);
+
+        _itemSize = CGSizeMake(_width / 2, _width / 2);
         _itemViews = [NSMutableArray array];
         _tintColor = [UIColor colorWithWhite:0.2 alpha:0.73];
         _borderWidth = 2;
@@ -656,16 +653,21 @@ static RNFrostedSidebar *rn_frostedMenu;
     
     NSUInteger count = self.itemViews.count;
     
-    const NSUInteger MAX_PER_HEIGHT = ([UIScreen mainScreen].bounds.size.height / (self.itemSize.height + topPadding));
+    CGFloat height = self.itemSize.height + ((self.titles) ? 35 : 0);
+    const NSUInteger MAX_PER_HEIGHT = ([UIScreen mainScreen].bounds.size.height / (height));
     
+    count = MIN(MAX_PER_HEIGHT, count);
     // Work out the yOffset to allow centering.
-    CGFloat yOffset = ([UIScreen mainScreen].bounds.size.height / (count + 1));
+    CGFloat yOffset = (([UIScreen mainScreen].bounds.size.height - 20) / (count));
     
     [self.itemViews enumerateObjectsUsingBlock:^(RNCalloutItemView *view, NSUInteger idx, BOOL *stop) {
-        CGFloat yPos = topPadding*idx + self.itemSize.height*idx + topPadding;
+        CGFloat center = yOffset * idx + yOffset / 2;
+        CGFloat yPos = center - height / 2 + 20;
+        /*
+        CGFloat yPos = topPadding * idx + height * idx;
         if (count <= MAX_PER_HEIGHT) {
-            yPos = yOffset * (idx + 1) - self.itemSize.height / 2;
-        }
+            yPos = yOffset * (idx + 1) - height / 2;
+        }*/
         CGRect frame = CGRectMake(leftPadding,
                                   yPos,
                                   self.itemSize.width,
