@@ -175,6 +175,8 @@
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, assign) NSInteger itemIndex;
 @property (nonatomic, strong) UIColor *originalBackgroundColor;
+@property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong) UILabel *titleLabel;
 
 @end
 
@@ -185,7 +187,11 @@
         _imageView = [[UIImageView alloc] init];
         _imageView.backgroundColor = [UIColor clearColor];
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
+        
+        _titleLabel = [[UILabel alloc] init];
+        _titleLabel.backgroundColor = [UIColor clearColor];
         [self addSubview:_imageView];
+        [self addSubview:_titleLabel];
     }
     return self;
 }
@@ -196,6 +202,13 @@
     CGFloat inset = self.bounds.size.height/2;
     self.imageView.frame = CGRectMake(0, 0, inset, inset);
     self.imageView.center = CGPointMake(inset, inset);
+    
+    self.titleLabel.text = self.title;
+    self.titleLabel.frame = CGRectMake(0, 0, 0, 0);
+    [self.titleLabel sizeToFit];
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
+    self.titleLabel.textColor = [UIColor whiteColor];
+    self.titleLabel.center = CGPointMake(inset, inset * 2 + 15);
 }
 
 - (void)setOriginalBackgroundColor:(UIColor *)originalBackgroundColor {
@@ -231,6 +244,12 @@
     self.backgroundColor = self.originalBackgroundColor;
 }
 
+- (void)setTitle:(NSString *)title {
+    _title = title;
+    self.titleLabel.text = title;
+    [self.titleLabel sizeToFit];
+}
+
 @end
 
 #pragma mark - Public Classes
@@ -255,7 +274,7 @@ static RNFrostedSidebar *rn_frostedMenu;
     return rn_frostedMenu;
 }
 
-- (instancetype)initWithImages:(NSArray *)images selectedIndices:(NSIndexSet *)selectedIndices borderColors:(NSArray *)colors {
+- (instancetype)initWithImages:(NSArray *)images selectedIndices:(NSIndexSet *)selectedIndices borderColors:(NSArray *)colors titles:(NSArray *)titles {
     if (self = [super init]) {
         _isSingleSelect = NO;
         _contentView = [[UIScrollView alloc] init];
@@ -281,6 +300,7 @@ static RNFrostedSidebar *rn_frostedMenu;
         _selectedIndices = [selectedIndices mutableCopy] ?: [NSMutableIndexSet indexSet];
         _borderColors = colors;
         _images = images;
+        _titles = titles;
         
         [_images enumerateObjectsUsingBlock:^(UIImage *image, NSUInteger idx, BOOL *stop) {
             
@@ -293,8 +313,9 @@ static RNFrostedSidebar *rn_frostedMenu;
             
             RNCalloutItemView *view = [[RNCalloutItemView alloc] init];
             view.itemIndex = idx;
-            view.clipsToBounds = YES;
+            view.clipsToBounds = NO;
             view.imageView.image = image;
+            view.title = title;
             [_contentView addSubview:view];
             
             [_itemViews addObject:view];
@@ -308,6 +329,10 @@ static RNFrostedSidebar *rn_frostedMenu;
         }];
     }
     return self;
+}
+
+- (instancetype)initWithImages:(NSArray *)images selectedIndices:(NSIndexSet *)selectedIndices borderColors:(NSArray *)colors {
+    return [self initWithImages:images selectedIndices:selectedIndices borderColors:colors titles:nil];
 }
 
 - (instancetype)initWithImages:(NSArray *)images selectedIndices:(NSIndexSet *)selectedIndices {

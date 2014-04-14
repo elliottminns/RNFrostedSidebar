@@ -91,6 +91,7 @@
  */
 @property (nonatomic, weak) id <RNFrostedSidebarDelegate> delegate;
 
+- (instancetype)initWithImages:(NSArray *)images selectedIndices:(NSIndexSet *)selectedIndices borderColors:(NSArray *)colors titles:(NSArray *)titles;
 - (instancetype)initWithImages:(NSArray *)images selectedIndices:(NSIndexSet *)selectedIndices borderColors:(NSArray *)colors;
 - (instancetype)initWithImages:(NSArray *)images selectedIndices:(NSIndexSet *)selectedIndices;
 - (instancetype)initWithImages:(NSArray *)images;
